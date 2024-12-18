@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 from dotenv import load_dotenv
 import os
-import time  # Importa o módulo time para o sleep
+import time  
 
 app = Flask(__name__)
 
@@ -13,7 +13,7 @@ BASE_URL_API_BITRIX = os.getenv('BASE_URL_API_BITRIX')
 
 BITRIX_WEBHOOK_URL = f"{BASE_URL_API_BITRIX}/{PROFILE}/{CODIGO_BITRIX}"
 
-# Mapeamento dos campos personalizados do CRM
+
 CRM_CUSTOM_FIELDS = [
     "UF_CRM_1697653896576", "UF_CRM_1697762313423", "UF_CRM_1697763267151", "UF_CRM_1697763906167", 
     "UF_CRM_1697764091406", "UF_CRM_1697764123510", "UF_CRM_1697807340141", "UF_CRM_1697807353336", 
@@ -41,9 +41,8 @@ CRM_CUSTOM_FIELDS = [
 @app.route('/api/update-crm/<int:deal_id>', methods=['POST'])
 def update_crm(deal_id):
     try:
-        # Passo 1: GET no card do CRM
         get_url = f"{BITRIX_WEBHOOK_URL}/crm.deal.get.json?ID={deal_id}"
-        get_response = requests.get(get_url, timeout=10)  # Define timeout de 10 segundos
+        get_response = requests.get(get_url, timeout=10)  
         
         if get_response.status_code != 200:
             return jsonify({"error": "Erro ao buscar o Negócio.", "details": get_response.json()}), 500
@@ -53,10 +52,10 @@ def update_crm(deal_id):
         if not deal_data:
             return jsonify({"error": "Negócio não encontrado."}), 404
         
-        # Pausa de 2 segundos
-        time.sleep(2)
+     
+        time.sleep(5)
         
-        # Passo 2: Transformar os valores dos campos personalizados em maiúsculas
+    
         fields_to_update = {}
         for field, value in deal_data.items():
             if field in CRM_CUSTOM_FIELDS and isinstance(value, str):
@@ -65,11 +64,11 @@ def update_crm(deal_id):
         if not fields_to_update:
             return jsonify({"message": "Nenhum campo para atualizar."})
         
-        # Passo 3: POST para atualizar o card no CRM
+       
         update_url = f"{BITRIX_WEBHOOK_URL}/crm.deal.update.json?ID={deal_id}"
         data = {'fields': fields_to_update}
         
-        update_response = requests.post(update_url, json=data, timeout=10)  # Define timeout de 10 segundos
+        update_response = requests.post(update_url, json=data, timeout=10)  
         
         if update_response.status_code != 200:
             return jsonify({"error": "Falha ao atualizar o Negócio.", "details": update_response.json()}), 500
