@@ -4,8 +4,6 @@ from dotenv import load_dotenv
 import os
 
 app = Flask(__name__)
-  "UF_CRM_1697653896576",
-
 
 CODIGO_BITRIX = os.getenv('CODIGO_BITRIX')
 CODIGO_BITRIX_STR = os.getenv('CODIGO_BITRIX_STR')
