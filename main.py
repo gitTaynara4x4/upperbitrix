@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
   "UF_CRM_1697653896576",
