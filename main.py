@@ -42,7 +42,7 @@ CRM_CUSTOM_FIELDS = [
 def update_crm(deal_id):
     try:
         get_url = f"{BITRIX_WEBHOOK_URL}/crm.deal.get.json?ID={deal_id}"
-        get_response = requests.get(get_url, timeout=10)  
+        get_response = requests.get(get_url, timeout=20)  
         
         if get_response.status_code != 200:
             return jsonify({"error": "Erro ao buscar o Negócio.", "details": get_response.json()}), 500
@@ -53,7 +53,7 @@ def update_crm(deal_id):
             return jsonify({"error": "Negócio não encontrado."}), 404
         
      
-        time.sleep(5)
+        time.sleep(10)
         
     
         fields_to_update = {}
@@ -68,7 +68,7 @@ def update_crm(deal_id):
         update_url = f"{BITRIX_WEBHOOK_URL}/crm.deal.update.json?ID={deal_id}"
         data = {'fields': fields_to_update}
         
-        update_response = requests.post(update_url, json=data, timeout=10)  
+        update_response = requests.post(update_url, json=data, timeout=20)  
         
         if update_response.status_code != 200:
             return jsonify({"error": "Falha ao atualizar o Negócio.", "details": update_response.json()}), 500
